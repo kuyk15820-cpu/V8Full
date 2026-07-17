@@ -96,10 +96,23 @@
 }
 
 - (void)setupSpinner {
-    self.hud = [[MBProgressHUD alloc] initWithView:self.view];
+    UIWindow *window = nil;
+    if (@available(iOS 13.0, *)) {
+        for (UIWindowScene *windowScene in [UIApplication sharedApplication].connectedScenes) {
+            if (windowScene.activationState == UISceneActivationStateForegroundActive) {
+                window = windowScene.windows.firstObject;
+                break;
+            }
+        }
+    }
+    if (!window) {
+        window = [UIApplication sharedApplication].keyWindow;
+    }
+
+    self.hud = [[MBProgressHUD alloc] initWithView:window];
     self.hud.backgroundView.style = MBProgressHUDBackgroundStyleSolidColor;
     self.hud.backgroundView.color = [UIColor colorWithWhite:0.f alpha:0.4f];
-    [self.view addSubview:self.hud];
+    [window addSubview:self.hud];
 }
 
 #pragma mark - UITableView Quick Setup (Dark Style)
